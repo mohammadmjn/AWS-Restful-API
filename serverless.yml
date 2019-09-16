@@ -1,0 +1,84 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: aws-challenge
+
+custom:
+  devicesTableName: ${self:service}-devices
+  devicesTableArn:
+    Fn::Join:
+      - ":"
+      - - arn
+        - aws
+        - dynamodb
+        - Ref: AWS::Region
+        - Ref: AWS::AccountId
+        - table/${self:custom.devicesTableName}
+
+provider:
+  name: aws
+  runtime: go1.x
+  stage: api
+  region: us-east-1
+  environment:
+    TABLE_NAME: ${self:custom.devicesTableName}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+      Resource:
+        - ${self:custom.devicesTableArn}
+
+package:
+  individually: true
+  exclude:
+    - ./**
+
+functions:
+  postDevice:
+    handler: bin/postDevice
+    package:
+      include:
+        - ./bin/postDevice
+    events:
+      - http:
+          path: devices
+          method: POST
+          cors: true
+  getDevice:
+    handler: bin/getDevice
+    package:
+      include:
+        - ./bin/getDevice
+    events:
+      - http:
+          path: devices/{id}
+          method: GET
+          cors: true
+
+resources:
+  Resources:
+    DeviceTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.devicesTableName}
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
