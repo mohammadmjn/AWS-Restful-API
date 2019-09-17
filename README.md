@@ -51,7 +51,7 @@ Much of the installation part is organized based of the Windows platform. First 
 
 ### Install AWS CLI
 
-If you already have installed pip, you can install the <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html">AWS CLI</a> (Command Line Interface) by using the following command:
+If you already have installed pip, you can install the <a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html">AWS CLI</a> (Command Line Interface) using the following command:
 
 ```bash:
 $ pip install awscli --upgrade --user
@@ -93,7 +93,7 @@ serverless --version
 
 - <a href="https://github.com/mohammadmjn/aws-restful-api/tree/master/getDevice">getDevice</a> : This directory includes two files in order to implement GET request in real world tests. The `get.go` file implements the main functions for fetching information of a device from DynamoDB table if it exists in the table. The `get_test.go` includes integration test which uses to test the code in real world.
 
-- <a href="https://github.com/mohammadmjn/aws-restful-api/tree/master/postDevice">postDevice</a> : It uses to implements POST request in real world tests. The `post.go` file includes the main functions for putting a device into DynamoDB table. The `post_test.go` includes integration test which uses to test POST request in real world.
+- <a href="https://github.com/mohammadmjn/aws-restful-api/tree/master/postDevice">postDevice</a> : It is used to implement POST request in real world tests. The `post.go` file includes the main functions for putting a device into DynamoDB table. The `post_test.go` includes integration test which is used to test POST request in real world.
 
 - <a href="https://github.com/mohammadmjn/aws-restful-api/tree/master/unitTest">unitTest</a> : unitTest includes codes used to implement mock test of codes. It contains two subdirectories: `getDevice` & `postDevice`. These two subdirectories are like previous one with some differences in their `get_test.go` and `post_test.go` files in order to mock the output of GET and POST requests respectively.
 
@@ -103,9 +103,7 @@ serverless --version
 
 ## Build
 
-You have to clone the repository to `%GOPATH%/src` directory since it imports `device` struct base on its relative path, otherwise the compiler will raise and error.
-
-then build the project using the following command:
+You have to clone the repository to `%GOPATH%/src` directory since it imports `device` struct base on its relative path, otherwise the compiler will raise an error. Then build the project using the following command:
 
 ```bash
 cd %GOPATH%/src/aws-restful-api
@@ -119,7 +117,7 @@ vim ~/.bashrc
 export TABLE_NAME="aws-challenge-devices"
 ```
 
-Another option to do this task if you don't want to manipulate your ~/.bashrc is that each time you open a new terminal in Unix-based systems or git bash in Windows, you have to execute following commands in order to export `TABLE_NAME` as environment variables:
+Another option to do this task if you don't want to manipulate your ~/.bashrc is that each time you open a new terminal in Unix-based systems or git bash in Windows, you have to execute following commands in order to export `TABLE_NAME` as environment variable:
 
 ```bash
 export TABLE_NAME=aws-challenge-devices
@@ -137,7 +135,7 @@ This command will give two URLs as endpoints for each request in the output.
 
 ## Unit Test
 
-In order to run unit tests for each request, you should navigate to its corresponding directory in `unitTest` folder and run the test command. Remember to export `TABLE_NAME` on opening a new terminal.
+In order to run unit tests for each request, you should navigate to its corresponding directory in `unitTest` folder and run the test command. Remember to export `TABLE_NAME` before executing the test command.
 
 For unit test of POST request:
 
