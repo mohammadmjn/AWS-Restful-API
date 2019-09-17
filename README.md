@@ -113,7 +113,7 @@ cd %GOPATH%/src/aws-restful-api
 make build
 ```
 
-:exclamation: :exclamation: Note that each time you open a new terminal in Unix-based systems or git bash in Windows, you have to execute following commands in order to export `TABLE_NAME` as environment variables:
+:exclamation::exclamation: Note that each time you open a new terminal in Unix-based systems or git bash in Windows, you have to execute following commands in order to export `TABLE_NAME` as environment variables:
 
 ```bash
 export TABLE_NAME=aws-challenge-devices
