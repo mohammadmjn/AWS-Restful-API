@@ -112,7 +112,7 @@ cd %GOPATH%/src/aws-restful-api
 make build
 ```
 
-:exclamation::exclamation: Note that you have to add the following command at the end of `~/.bashrc` of git bash in Windows or Unix-based systems to add `TABLE_Name` and its corresponding value as an environment variable.
+:exclamation::exclamation: Note that you have to add the following command at the end of `~/.bashrc` of git bash in Windows or Unix-based systems to add `TABLE_NAME` and its corresponding value as an environment variable.
 
 ```bash
 vim ~/.bashrc
