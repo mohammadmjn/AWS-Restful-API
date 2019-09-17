@@ -2,13 +2,13 @@
 
 This package, which is developed in Golang, implements two simple HTTP request (POST, GET) on Amazon Web Services (AWS) in order to put an item in DynamoDB table through POST request, as well as fetch information about and specific item from DynamoDB table (if exists) via GET request. The package applies AWS Lambda function to interact with AWS interface.
 
-## API Request-Responce Cycle
+## API Request Type
 
 The API accepts the following JSON requests and produces the corresponding HTTP responses:
 
-### Request 1:
+### Request 1
 
-Request to insert a new device to database(DynamoDB).
+POST request to insert a new device to DynamoDB database
 
 ```
 HTTP Method: POST
@@ -24,83 +24,14 @@ Body:
   }
 ```
 
-#### Response 1 - Success:
+### Request 2
 
-Provided data inserted to database(DynamoDB) successfully.
-
-```
-HTTP-Statuscode: HTTP 201
-content-type: application/json
-Body:
-  {
-    "id": "/devices/id1",
-    "deviceModel": "/devicemodels/id1",
-    "name": "Sensor",
-    "note": "Testing a sensor.",
-    "serial": "A020000102"
-  }
-```
-
-#### Response 1 - Failure 1:
-
-If any of the payload fields are missing, response will have a descriptive error message for client.
-
-```
-HTTP-Statuscode: HTTP 400
-"Following fields are not provided: id, serial, ..."
-```
-
-#### Response 1 - Failure 2:
-
-If any exceptional situation occurs on the server side.
-
-```
-HTTP-Statuscode: HTTP 500
-"Internal Server's Error occurred."
-```
-
-### Request 2:
-
-Get a device based on provided id.
+GET request to fetch a device information based on provided ID
 
 ```
 HTTP Method: GET
-URL: https://<api-gateway-url>/api/devices/{id}
-
-Replace {id} with desire device id
+URL: https://<api-gateway-url>/api/devices/{desired_id}
 ```
-
-#### Response 2 - Success:
-
-The desire id exists on DynamoDB.
-
-```
-HTTP-Statuscode: HTTP 200
-content-type: application/json
-body:
-  {
-    "id": "/devices/id1",
-    "deviceModel": "/devicemodels/id1",
-    "name": "Sensor",
-    "note": "Testing a sensor.",
-    "serial": "A020000102"
-  }
-```
-
-#### Response 2 - Failure 1:
-
-```
-HTTP-Statuscode: HTTP 404
-"Desired device with provided id was not founded."
-```
-
-#### Response 2 - Failure 2:
-
-If any exceptional situation occurs on the server side.
-
-````
-HTTP-Statuscode: HTTP 500
-"Internal Server's Error occured."
 
 ## Prerequisites
 
@@ -124,7 +55,7 @@ If you already have installed pip, you can install the <a href="https://docs.aws
 
 ```bash:
 $ pip install awscli --upgrade --user
-````
+```
 
 Then you can configure AWS CLI with your credentials and region information:
 
@@ -169,43 +100,71 @@ serverless --version
 
 - <a href="https://github.com/mohammadmjn/aws-restful-api/blob/master/Makefile">Makefile</a> : which is necessary to compile the project.
 
-<a href="https://github.com/mohammadmjn/aws-restful-api/blob/master/serverless.yml">serverless.yml</a> : The core component which contains all configurations to deploy this project on AWS.
+- <a href="https://github.com/mohammadmjn/aws-restful-api/blob/master/serverless.yml">serverless.yml</a> : The core component which contains all configurations to deploy this project on AWS.
 
 ## Build
 
-You have to clone the repository to `%GOPATH%\src` directory since it imports `device` struct base on its relative path, otherwise the compiler will raise and error.
+You have to clone the repository to `%GOPATH%/src` directory since it imports `device` struct base on its relative path, otherwise the compiler will raise and error.
 
 then build the project using the following command:
 
 ```bash
-cd %GOPATH%\src\aws-restful-api
+cd %GOPATH%/src/aws-restful-api
 make build
 ```
 
-:exclamation: Note that
-
-Launch `scenario.launch` which is in launch folder. This file calls `human_scenario.py` script which is located in scripts folder and it's the main file of Human Navigation scenario:
+:exclamation: :exclamation: Note that each time you open a new terminal in Unix-based systems or git bash in Windows, you have to execute following commands in order to export `TABLE_NAME` as environment variables:
 
 ```bash
-roslaunch human_nav_scenario scenario.launch
+export TABLE_NAME=aws-challenge-devices
 ```
 
-## Testing the Scenario
+## Deploy
 
-Given that Oculus Rift may not be available at test time, there are 2 python scripts to complete testing of Human Navigation scenario. First of all, Run the scenario. Then, start simulation in Windows side (Unity). To send 'Guidance_request' to robot, run `guidance_msg_pub.py` in a new terminal:
+Deploy the project to AWS using following command:
 
 ```bash
-rosrun human_nav_scenario guidance_msg_pub.py
+sls deploy
 ```
 
-After running this script, the robot will receive 'Guidance_request' message and will give instructions to the test subject (human).
+This command will give two URLs as endpoints for each request in the output.
 
-In order to test ability of the scenario to handle switching between sessions, you can use `giveup_publisher.py`. To run this script:
+## Unit Test
+
+In order to run unit tests for each request, you should navigate to its corresponding directory in `unitTest` folder and run the test command. Remember to export `TABLE_NAME` on opening a new terminal.
+
+For unit test of POST request:
 
 ```bash
-rosrun human_nav_scenario giveup_publisher.py
+cd unitTest/postDevice
+go test -v
+```
+
+For unit test of GET request:
+
+```bash
+cd unitTest/getDevice
+go test -v
+```
+
+## Integration Test
+
+In order to test the code in real world (integration test) on AWS DynamoDB database (given endpoints), run the test files located in `postDevice` or `getDeivce` of main project directory. Thus, you should execute following command in terminal or git bash:
+
+For integration test of POST request:
+
+```bash
+cd postDevice/
+go test -v
+```
+
+For integration test of GET request:
+
+```bash
+cd getDevice/
+go test -v
 ```
 
 ## Author
 
-Mohammad Mojrian - AWS Restful API
+Mohammad Mojrian - AWS Serverless Restful API
