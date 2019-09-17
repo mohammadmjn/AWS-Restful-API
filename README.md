@@ -95,8 +95,7 @@ serverless --version
 
 - <a href="https://github.com/mohammadmjn/aws-restful-api/tree/master/postDevice">postDevice</a> : It uses to implements POST request in real world tests. The `post.go` file includes the main functions for putting a device into DynamoDB table. The `post_test.go` includes integration test which uses to test POST request in real world.
 
-- <a href="https://github.com/mohammadmjn/aws-restful-api/tree/master/unitTest">unitTest</a> : unitTest includes codes used to implement mock test of
-  codes. It contains two subdirectories: `getDevice` & `postDevice`. These two subdirectories are like previous one with some differences in their `get_test.go` and `post_test.go` files in order to mock the output of GET and POST requests respectively.
+- <a href="https://github.com/mohammadmjn/aws-restful-api/tree/master/unitTest">unitTest</a> : unitTest includes codes used to implement mock test of codes. It contains two subdirectories: `getDevice` & `postDevice`. These two subdirectories are like previous one with some differences in their `get_test.go` and `post_test.go` files in order to mock the output of GET and POST requests respectively.
 
 - <a href="https://github.com/mohammadmjn/aws-restful-api/blob/master/Makefile">Makefile</a> : which is necessary to compile the project.
 
@@ -113,7 +112,14 @@ cd %GOPATH%/src/aws-restful-api
 make build
 ```
 
-:exclamation::exclamation: Note that each time you open a new terminal in Unix-based systems or git bash in Windows, you have to execute following commands in order to export `TABLE_NAME` as environment variables:
+:exclamation::exclamation: Note that you have to add the following command at the end of `~/.bashrc` of git bash in Windows or Unix-based systems to add `TABLE_Name` and its corresponding value as an environment variable.
+
+```bash
+vim ~/.bashrc
+export TABLE_NAME="aws-challenge-devices"
+```
+
+Another option to do this task if you don't want to manipulate your ~/.bashrc is that each time you open a new terminal in Unix-based systems or git bash in Windows, you have to execute following commands in order to export `TABLE_NAME` as environment variables:
 
 ```bash
 export TABLE_NAME=aws-challenge-devices
