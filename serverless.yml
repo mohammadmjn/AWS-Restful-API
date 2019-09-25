@@ -3,7 +3,7 @@
 service: aws-challenge
 
 custom:
-  devicesTableName: ${self:service}-devices
+  devicesTableName: ${self:service}-devices-dev
   devicesTableArn:
     Fn::Join:
       - ":"
@@ -17,7 +17,7 @@ custom:
 provider:
   name: aws
   runtime: go1.x
-  stage: api
+  stage: dev
   region: us-east-1
   environment:
     TABLE_NAME: ${self:custom.devicesTableName}
@@ -42,7 +42,7 @@ functions:
         - ./bin/postDevice
     events:
       - http:
-          path: devices
+          path: api/devices
           method: POST
           cors: true
   getDevice:
@@ -52,7 +52,7 @@ functions:
         - ./bin/getDevice
     events:
       - http:
-          path: devices/{id}
+          path: api/devices/{id}
           method: GET
           cors: true
 

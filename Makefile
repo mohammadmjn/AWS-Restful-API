@@ -2,7 +2,7 @@
 
 .EXPORT_ALL_VARIABLES:
 AWS_REGION ?= us-east-1
-TABLE_NAME ?= aws-challenge-devices
+TABLE_NAME ?= aws-challenge-devices-dev
 
 build:
 	dep ensure -v
