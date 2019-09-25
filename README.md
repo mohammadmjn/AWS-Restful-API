@@ -114,13 +114,13 @@ make build
 
 ```bash
 vim ~/.bashrc
-export TABLE_NAME="aws-challenge-devices"
+export TABLE_NAME="aws-challenge-devices-dev"
 ```
 
 Another option to do this task if you don't want to manipulate your ~/.bashrc is that each time you open a new terminal in Unix-based systems or git bash in Windows, you have to execute following commands in order to export `TABLE_NAME` as environment variable:
 
 ```bash
-export TABLE_NAME=aws-challenge-devices
+export TABLE_NAME=aws-challenge-devices-dev
 ```
 
 ## Deploy
@@ -168,6 +168,26 @@ For integration test of GET request:
 cd getDevice/
 go test -v
 ```
+
+## Test with `curl`
+
+After deploying the project, you can test the project using following `curl` command. These commands can interact with resulting API, whose results can be confirmed in both your terminal and DyamoDB console. In the following commands you have to substitute *<url_from_deploying>* with the url that you have received from [Deploy section](#markdown-header-deploy).
+
+### POST
+
+```bash
+curl -H "Content-Type: application/json" -X POST <url_from_deploying> -d '{"id":"id1","deviceModel":"/devicemodels/id1","name":"Sensor","note":"Testing a sensor.","serial":"A020000102"}'
+```
+
+### GET
+
+Using an `id`, you can now obtain an item as follows:
+
+```bash
+curl <url_from_deploying>/{id}
+```
+
+Note that the `{id}` should be replaced with your desired ID.
 
 ## Author
 
