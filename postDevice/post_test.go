@@ -216,7 +216,7 @@ func TestPostHandlerIntegration(t *testing.T) {
 	}
 	for _, testcase := range testcases {
 		t.Run(testcase.name, func(t *testing.T) {
-			if gotResponse := PostHandler(testcase.request.request); !reflect.DeepEqual(gotResponse, testcase.expectedResponse) {
+			if gotResponse, _ := PostHandler(testcase.request.request); !reflect.DeepEqual(gotResponse, testcase.expectedResponse) {
 				t.Errorf("%s \nGot output from postHandler() = %v\nExpected output = %v", testcase.name, gotResponse, testcase.expectedResponse)
 			}
 		})

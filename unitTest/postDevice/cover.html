@@ -127,18 +127,18 @@ func ValidateDeviceInfo(device device.Device) []string <span class="cov8" title=
         <span class="cov8" title="1">return missedField</span>
 }
 
-func PostHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyResponse <span class="cov8" title="1">{
+func PostHandler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) <span class="cov8" title="1">{
         if request.HTTPMethod != "POST" </span><span class="cov8" title="1">{
                 return events.APIGatewayProxyResponse{
                         StatusCode: http.StatusBadRequest,
                         Body:       "400 Bad Request: Invalid http method",
-                }
+                }, nil
         }</span>
         <span class="cov8" title="1">if request.Headers["Content-Type"] != "application/json" </span><span class="cov8" title="1">{
                 return events.APIGatewayProxyResponse{
                         StatusCode: http.StatusBadRequest,
                         Body:       "400 Bad Request: Invalid content type. It is not in a JSON format",
-                }
+                }, nil
         }</span>
 
         <span class="cov8" title="1">splitPath := strings.Split(request.Path, "/")
@@ -146,14 +146,14 @@ func PostHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRe
                 return events.APIGatewayProxyResponse{
                         StatusCode: http.StatusForbidden,
                         Body:       "403 Forbidden: You don't have permission to access " + request.Path,
-                }
+                }, nil
         }</span>
 
         <span class="cov8" title="1">if len(request.Body) == 0 </span><span class="cov8" title="1">{
                 return events.APIGatewayProxyResponse{
                         StatusCode: http.StatusBadRequest,
                         Body:       "400 Bad Request: Invalid JSON request. All fields are empty",
-                }
+                }, nil
         }</span>
 
         <span class="cov8" title="1">device := device.Device{}
@@ -163,7 +163,7 @@ func PostHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRe
                 return events.APIGatewayProxyResponse{
                         StatusCode: http.StatusBadRequest,
                         Body:       "400 Bad Request: Invalid JSON format",
-                }
+                }, nil
         }</span>
 
         <span class="cov8" title="1">missedFields := ValidateDeviceInfo(device)
@@ -175,7 +175,7 @@ func PostHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRe
                 <span class="cov8" title="1">return events.APIGatewayProxyResponse{
                         StatusCode: http.StatusBadRequest,
                         Body:       "400 Bad Request: No value is specified for field(s) " + messageMissedFields + "of device in json request",
-                }</span>
+                }, nil</span>
         }
 
         <span class="cov8" title="1">deviceItem, _ := dynamodbattribute.MarshalMap(device)
@@ -184,14 +184,14 @@ func PostHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRe
                 return events.APIGatewayProxyResponse{
                         StatusCode: http.StatusInternalServerError,
                         Body:       "500 Internal Server Error: The server encountered an internal error or misconfiguration to connect to database",
-                }
+                }, nil
         }</span>
 
         <span class="cov8" title="1">responseBody, _ := json.Marshal(device)
         return events.APIGatewayProxyResponse{
                 StatusCode: http.StatusCreated,
                 Body:       string(responseBody),
-        }</span>
+        }, nil</span>
 }
 
 func main() <span class="cov0" title="0">{

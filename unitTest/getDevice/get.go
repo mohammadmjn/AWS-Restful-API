@@ -37,12 +37,12 @@ func GetDevice(deviceId string, dynamoIfaceSvc dynamodbiface.DynamoDBAPI) (*dyna
 	return operOutput, err
 }
 
-func GetHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyResponse {
+func GetHandler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	if request.HTTPMethod != "GET" {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 			Body:       "400 Bad Request: Invalid http method",
-		}
+		}, nil
 	}
 
 	deviceId := ""
@@ -53,13 +53,13 @@ func GetHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRes
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusForbidden,
 			Body:       "403 Forbidden Access: URL path is incorrect",
-		}
+		}, nil
 	}
 	if deviceId == "" {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 			Body:       "400 Bad Request: ID of device is missed in path",
-		}
+		}, nil
 	}
 
 	result, err2 := GetDevice(deviceId, dynamoDBSvc)
@@ -67,14 +67,14 @@ func GetHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRes
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusInternalServerError,
 			Body:       "500 Internal Server Error: The server encountered an internal error or misconfiguration to connect to database",
-		}
+		}, nil
 	}
 
 	if len(result.Item) == 0 {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusNotFound,
 			Body:       "404 Not Found: Requested item does not exist in the database",
-		}
+		}, nil
 	}
 
 	device := device.Device{}
@@ -84,7 +84,7 @@ func GetHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRes
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusInternalServerError,
 			Body:       "500 Internal Server Error",
-		}
+		}, nil
 	}
 
 	deviceJson, _ := json.Marshal(device)
@@ -92,7 +92,7 @@ func GetHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRes
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusOK,
 		Body:       string(deviceJson),
-	}
+	}, nil
 }
 
 func main() {

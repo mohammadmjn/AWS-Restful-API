@@ -1,13 +1,13 @@
 mode: set
 aws-restful-api/unitTest/getDevice/get.go:21.13,24.2 2 1
 aws-restful-api/unitTest/getDevice/get.go:26.108,38.2 4 1
-aws-restful-api/unitTest/getDevice/get.go:40.87,41.33 1 1
+aws-restful-api/unitTest/getDevice/get.go:40.96,41.33 1 1
 aws-restful-api/unitTest/getDevice/get.go:48.2,50.77 3 1
 aws-restful-api/unitTest/getDevice/get.go:58.2,58.20 1 1
 aws-restful-api/unitTest/getDevice/get.go:65.2,66.17 2 1
 aws-restful-api/unitTest/getDevice/get.go:73.2,73.27 1 1
 aws-restful-api/unitTest/getDevice/get.go:80.2,83.17 3 1
-aws-restful-api/unitTest/getDevice/get.go:90.2,95.3 2 1
+aws-restful-api/unitTest/getDevice/get.go:90.2,95.8 2 1
 aws-restful-api/unitTest/getDevice/get.go:41.33,46.3 1 1
 aws-restful-api/unitTest/getDevice/get.go:50.77,52.3 1 1
 aws-restful-api/unitTest/getDevice/get.go:52.8,57.3 1 1

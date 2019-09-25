@@ -83,7 +83,7 @@ func TestGetHandlerIntegration(t *testing.T) {
 
 	for _, testcase := range testcases {
 		t.Run(testcase.name, func(t *testing.T) {
-			if gotOutput := GetHandler(testcase.request); !reflect.DeepEqual(gotOutput, testcase.expectedOutput) {
+			if gotOutput, _ := GetHandler(testcase.request); !reflect.DeepEqual(gotOutput, testcase.expectedOutput) {
 				t.Errorf("%s \nGot output from GetHandler() = %v\nExpected output = %v", testcase.name, gotOutput, testcase.expectedOutput)
 			}
 		})

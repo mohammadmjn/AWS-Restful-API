@@ -107,12 +107,12 @@ func GetDevice(deviceId string, dynamoIfaceSvc dynamodbiface.DynamoDBAPI) (*dyna
         return operOutput, err
 }</span>
 
-func GetHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyResponse <span class="cov8" title="1">{
+func GetHandler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) <span class="cov8" title="1">{
         if request.HTTPMethod != "GET" </span><span class="cov8" title="1">{
                 return events.APIGatewayProxyResponse{
                         StatusCode: http.StatusBadRequest,
                         Body:       "400 Bad Request: Invalid http method",
-                }
+                }, nil
         }</span>
 
         <span class="cov8" title="1">deviceId := ""
@@ -123,13 +123,13 @@ func GetHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRes
                 return events.APIGatewayProxyResponse{
                         StatusCode: http.StatusForbidden,
                         Body:       "403 Forbidden Access: URL path is incorrect",
-                }
+                }, nil
         }</span>
         <span class="cov8" title="1">if deviceId == "" </span><span class="cov8" title="1">{
                 return events.APIGatewayProxyResponse{
                         StatusCode: http.StatusBadRequest,
                         Body:       "400 Bad Request: ID of device is missed in path",
-                }
+                }, nil
         }</span>
 
         <span class="cov8" title="1">result, err2 := GetDevice(deviceId, dynamoDBSvc)
@@ -137,14 +137,14 @@ func GetHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRes
                 return events.APIGatewayProxyResponse{
                         StatusCode: http.StatusInternalServerError,
                         Body:       "500 Internal Server Error: The server encountered an internal error or misconfiguration to connect to database",
-                }
+                }, nil
         }</span>
 
         <span class="cov8" title="1">if len(result.Item) == 0 </span><span class="cov8" title="1">{
                 return events.APIGatewayProxyResponse{
                         StatusCode: http.StatusNotFound,
                         Body:       "404 Not Found: Requested item does not exist in the database",
-                }
+                }, nil
         }</span>
 
         <span class="cov8" title="1">device := device.Device{}
@@ -154,7 +154,7 @@ func GetHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRes
                 return events.APIGatewayProxyResponse{
                         StatusCode: http.StatusInternalServerError,
                         Body:       "500 Internal Server Error",
-                }
+                }, nil
         }</span>
 
         <span class="cov8" title="1">deviceJson, _ := json.Marshal(device)
@@ -162,7 +162,7 @@ func GetHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRes
         return events.APIGatewayProxyResponse{
                 StatusCode: http.StatusOK,
                 Body:       string(deviceJson),
-        }</span>
+        }, nil</span>
 }
 
 func main() <span class="cov0" title="0">{

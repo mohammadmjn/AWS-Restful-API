@@ -57,18 +57,18 @@ func ValidateDeviceInfo(device device.Device) []string {
 	return missedField
 }
 
-func PostHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyResponse {
+func PostHandler(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	if request.HTTPMethod != "POST" {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 			Body:       "400 Bad Request: Invalid http method",
-		}
+		}, nil
 	}
 	if request.Headers["Content-Type"] != "application/json" {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 			Body:       "400 Bad Request: Invalid content type. It is not in a JSON format",
-		}
+		}, nil
 	}
 
 	splitPath := strings.Split(request.Path, "/")
@@ -76,14 +76,14 @@ func PostHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRe
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusForbidden,
 			Body:       "403 Forbidden: You don't have permission to access " + request.Path,
-		}
+		}, nil
 	}
 
 	if len(request.Body) == 0 {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 			Body:       "400 Bad Request: Invalid JSON request. All fields are empty",
-		}
+		}, nil
 	}
 
 	device := device.Device{}
@@ -93,7 +93,7 @@ func PostHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRe
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 			Body:       "400 Bad Request: Invalid JSON format",
-		}
+		}, nil
 	}
 
 	missedFields := ValidateDeviceInfo(device)
@@ -105,7 +105,7 @@ func PostHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRe
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusBadRequest,
 			Body:       "400 Bad Request: No value is specified for field(s) " + messageMissedFields + "of device in json request",
-		}
+		}, nil
 	}
 
 	deviceItem, _ := dynamodbattribute.MarshalMap(device)
@@ -114,14 +114,14 @@ func PostHandler(request events.APIGatewayProxyRequest) events.APIGatewayProxyRe
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusInternalServerError,
 			Body:       "500 Internal Server Error: The server encountered an internal error or misconfiguration to connect to database",
-		}
+		}, nil
 	}
 
 	responseBody, _ := json.Marshal(device)
 	return events.APIGatewayProxyResponse{
 		StatusCode: http.StatusCreated,
 		Body:       string(responseBody),
-	}
+	}, nil
 }
 
 func main() {
